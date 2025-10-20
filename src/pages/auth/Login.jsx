@@ -1,120 +1,49 @@
-import { motion } from "framer-motion";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
 
 export default function Login() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const role = new URLSearchParams(location.search).get("role") || "user";
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    console.log("Logging in as:", role, email, password);
-
-    // Redirect based on role
-    if (role === "farmer") navigate("/farmer/home"); // FarmerHome.jsx
-    else navigate("/home"); // Home.jsx (buyer)
-  };
 
   return (
     <div
-      className="flex items-center justify-center min-h-screen px-4 relative"
+      className="min-h-screen flex items-center justify-center bg-cover bg-center"
       style={{
-        backgroundImage: "url('/images/login-bg.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
+        backgroundImage:
+          "url('https://images.unsplash.com/photo-1592928302707-6f6e65f04c3f?auto=format&fit=crop&w=1350&q=80')", // 🌾 Replace with your own farm image
       }}
     >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/30"></div>
+      <div className="bg-white/90 backdrop-blur-sm shadow-xl rounded-2xl px-8 py-10 w-full max-w-md">
+        <h1 className="text-3xl font-bold text-green-700 text-center mb-6">
+          Welcome To Farm Connect🌿
+        </h1>
 
-      {/* Login Card */}
-      <motion.div
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 sm:p-10 z-10"
-      >
-        {/* Header */}
-        <motion.h1
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="text-3xl sm:text-4xl font-bold text-green-800 mb-8 text-center"
-        >
-          Log in
-        </motion.h1>
-
-        {/* Form */}
-        <motion.form
-          onSubmit={handleLogin}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="space-y-6"
-        >
-          {/* Email */}
-          <div className="flex flex-col">
-            <label htmlFor="email" className="text-gray-700 text-sm font-medium mb-2">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="Enter your email"
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 shadow-sm"
-            />
-          </div>
-
-          {/* Password */}
-          <div className="flex flex-col">
-            <label htmlFor="password" className="text-gray-700 text-sm font-medium mb-2">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="Enter your password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 shadow-sm"
-            />
-          </div>
-
-          {/* Forgot Password */}
-          <div className="text-right">
-            <Link to="/reset-password" className="text-green-700 hover:underline text-sm">
-              Forgot password?
-            </Link>
-          </div>
-
-          {/* Submit */}
-          <motion.button
-            whileTap={{ scale: 0.97 }}
-            type="submit"
-            className="w-full py-3 bg-green-600 text-white font-semibold rounded-xl shadow-lg hover:bg-green-700 transition-colors"
+        <div className="space-y-4">
+          <Input placeholder="Email" className="border-green-300" />
+          <Input
+            type="password"
+            placeholder="Password"
+            className="border-green-300" 
+          />  <br></br>
+          <Button
+            className="w-full bg-green-600 hover:bg-green-700 text-white rounded-full py-2"
+            onClick={() => navigate("/home")}
           >
-            Log in
-          </motion.button>
+            Sign In
+          </Button>
+        </div>
 
-          {/* Register */}
-          <p className="text-center text-gray-600 mt-2 text-sm">
-            New here?{" "}
-            <Link to="/signup" className="text-green-700 font-semibold hover:underline">
-              Register
-            </Link>
-          </p>
-        </motion.form>
-      </motion.div>
-      
+        <p className="text-center text-gray-600 text-sm mt-4">
+          Don’t have an account?{" "}
+          <span
+            onClick={() => navigate("/signup")}
+            className="text-green-600 font-semibold cursor-pointer hover:underline"
+          >
+            Sign Up
+          </span>
+        </p>
+      </div>
     </div>
   );
 }
