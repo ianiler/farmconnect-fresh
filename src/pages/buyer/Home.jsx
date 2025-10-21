@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Search, Bell, Home, Clipboard, List, User } from "lucide-react";
+import { Search, Bell, Home, Clipboard, List, ShoppingCart } from "lucide-react";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { useNavigate } from "react-router-dom";
@@ -7,151 +7,168 @@ import { useNavigate } from "react-router-dom";
 export default function BuyerHome() {
   const navigate = useNavigate();
 
+  // Make sure these images exist in public/images/
   const categories = [
-    {
-      name: "Vegetables",
-      image:
-        "https://images.unsplash.com/photo-1572441710534-680c64cc43f9?auto=format&fit=crop&w=400&q=80",
-    },
-    {
-      name: "Poultry",
-      image:
-        "https://images.unsplash.com/photo-1590080875839-3e5d58d9a59e?auto=format&fit=crop&w=400&q=80",
-    },
-    {
-      name: "Fruits",
-      image:
-        "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=400&q=80",
-    },
-    {
-      name: "Fish",
-      image:
-        "https://images.unsplash.com/photo-1617196037302-0b8b2d58b7f3?auto=format&fit=crop&w=400&q=80",
-    },
+    { name: "Vegetables", image: "/images/vegetables.jpg" },
+    { name: "Poultry", image: "/images/poultry.jpg" },
+    { name: "Fruits", image: "/images/fruits.jpg" },
+    { name: "Fish", image: "/images/fish.jpg" },
   ];
 
   const recentProducts = [
     {
-      name: "Aki Kindele",
-      price: "₦1,000",
-      farmer: "Sanda Balik",
-      image:
-        "https://images.unsplash.com/photo-1627308595229-7830a5c91f9f?auto=format&fit=crop&w=500&q=80",
+      name: "Vegetables",
+      price: "UGX 2,000",
+      farmer: "Sandra..0771182017",
+      image: "/images/vegetables.jpg",
     },
     {
-      name: "Asa Kanda",
-      price: "₦800",
-      farmer: "Bello Abio",
-      image:
-        "https://images.unsplash.com/photo-1604908177522-0400231a8ee8?auto=format&fit=crop&w=500&q=80",
+      name: "Eggs",
+      price: "UGX 12,000",
+      farmer: "Bello 0708155525",
+      image: "/images/product1.jpg",
+    },
+    {
+      name: "Tomatoes",
+      price: "UGX 3,500",
+      farmer: "Juma 0772694420",
+      image: "/images/fruits.jpg",
+    },
+    {
+      name: "Tilapia",
+      price: "UGX 18,000",
+      farmer: "Musa Kato",
+      image: "/images/fish.jpg",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 pb-24">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="max-w-3xl mx-auto px-4 space-y-6"
+        className="max-w-3xl mx-auto px-4 space-y-8"
       >
         {/* Header */}
         <div className="flex justify-between items-center py-4">
-          <h1 className="text-2xl sm:text-3xl font-bold text-green-700">
-            FarmConnect
+          <h1 className="text-2xl sm:text-3xl font-bold text-green-800">
+            What Would You Like To Buy?
           </h1>
-          <Bell className="h-6 w-6 text-green-600 cursor-pointer" />
+          <Bell className="h-6 w-6 text-green-700 cursor-pointer" />
         </div>
 
-        {/* Search */}
+        {/* Search Bar */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
           <Input
-            placeholder="Search product, farm, category"
-            className="pl-10 border-green-300 rounded-full w-full"
+            placeholder="Search for products, farms, or categories..."
+            className="pl-10 border-green-300 rounded-full w-full shadow-sm"
           />
         </div>
 
-        {/* Offer */}
-        <div className="bg-green-100 p-4 rounded-xl shadow-sm text-center">
-          <p className="text-green-800 font-semibold">Good Offer!</p>
-          <p className="text-sm text-gray-600">30% off on first purchase</p>
+        {/* Offer Banner */}
+        <div className="bg-green-200 p-4 rounded-xl shadow text-center">
+          <p className="text-green-900 font-semibold text-lg">
+            🌾 Great Offers Available!
+          </p>
+          <p className="text-sm text-green-700">
+            Get up to 30% off on your first order.
+          </p>
         </div>
 
-        {/* Categories */}
-        <h2 className="text-lg font-semibold text-green-800">Categories</h2>
-        <div className="flex overflow-x-auto space-x-4 pb-2 justify-center">
+        {/* Categories Section */}
+        <h2 className="text-lg font-semibold text-green-800 text-center">
+          Categories
+        </h2>
+        <div className="grid grid-cols-2 gap-4 justify-items-center">
           {categories.map((cat) => (
-            <Button
+            <motion.div
               key={cat.name}
-              variant="ghost"
-              className="flex flex-col items-center min-w-[80px]"
+              whileHover={{ scale: 1.05 }}
               onClick={() =>
                 navigate(`/category/${cat.name.toLowerCase().replace(/ /g, "-")}`)
               }
+              className="relative w-full max-w-[180px] h-36 rounded-2xl overflow-hidden shadow-md cursor-pointer"
             >
               <img
                 src={cat.image}
                 alt={cat.name}
-                className="w-16 h-16 rounded-full mb-2 object-cover shadow-md"
-                onError={(e) => {
-                  e.target.src = "https://via.placeholder.com/100";
-                }}
+                className="w-full h-full object-cover"
               />
-              <p className="text-xs text-gray-700">{cat.name}</p>
-            </Button>
+              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                <p className="text-white text-lg font-semibold drop-shadow-md">
+                  {cat.name}
+                </p>
+              </div>
+            </motion.div>
           ))}
         </div>
 
-        {/* Recent Products */}
-        <h2 className="text-lg font-semibold text-green-800">
-          Farmers around you
+        {/* Products Section */}
+        <h2 className="text-lg font-semibold text-green-800 text-center">
+          Farmers Around You
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 justify-center">
+        <div className="grid grid-cols-2 gap-4 justify-items-center">
           {recentProducts.map((prod) => (
-            <div
+            <motion.div
               key={prod.name}
-              className="bg-white rounded-2xl shadow-md cursor-pointer flex flex-col items-center p-3 transition hover:scale-105"
+              whileHover={{ scale: 1.05 }}
               onClick={() =>
                 navigate(`/product/${prod.name.toLowerCase().replace(/ /g, "-")}`)
               }
+              className="bg-white rounded-2xl shadow-md overflow-hidden w-full max-w-[180px] cursor-pointer"
             >
               <img
                 src={prod.image}
                 alt={prod.name}
-                className="w-full h-24 object-cover rounded-lg mb-2"
-                onError={(e) => {
-                  e.target.src = "https://via.placeholder.com/100";
-                }}
+                className="w-full h-36 object-cover"
               />
-              <p className="text-sm font-medium text-green-800 text-center">
-                {prod.name}
-              </p>
-              <p className="text-xs text-gray-600 text-center">{prod.farmer}</p>
-              <p className="text-xs text-green-700 font-bold mt-1">
-                {prod.price}
-              </p>
-            </div>
+              <div className="p-2 text-center">
+                <p className="text-sm font-medium text-green-800">{prod.name}</p>
+                <p className="text-xs text-gray-600">{prod.farmer}</p>
+                <p className="text-xs text-green-700 font-bold">{prod.price}</p>
+              </div>
+            </motion.div>
           ))}
         </div>
       </motion.div>
 
       {/* Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-inner py-2 flex justify-around">
-        <Button variant="ghost" onClick={() => navigate("/home")} className="flex flex-col items-center">
+        <Button
+          variant="ghost"
+          onClick={() => navigate("/home")}
+          className="flex flex-col items-center"
+        >
           <Home className="h-5 w-5 text-green-700" />
           <span className="text-xs mt-0.5 text-green-700">Home</span>
         </Button>
-        <Button variant="ghost" onClick={() => navigate("/buyer/orders")} className="flex flex-col items-center">
+
+        <Button
+          variant="ghost"
+          onClick={() => navigate("/my-orders")}
+          className="flex flex-col items-center"
+        >
           <Clipboard className="h-5 w-5 text-green-700" />
-          <span className="text-xs mt-0.5 text-green-700">Orders</span>
+          <span className="text-xs mt-0.5 text-green-700">My Orders</span>
         </Button>
-        <Button variant="ghost" onClick={() => navigate("/buyer/list")} className="flex flex-col items-center">
+
+        <Button
+          variant="ghost"
+          onClick={() => navigate("/saved-items")}
+          className="flex flex-col items-center"
+        >
           <List className="h-5 w-5 text-green-700" />
-          <span className="text-xs mt-0.5 text-green-700">List</span>
+          <span className="text-xs mt-0.5 text-green-700">Saved</span>
         </Button>
-        <Button variant="ghost" onClick={() => navigate("/buyer/profile")} className="flex flex-col items-center">
-          <User className="h-5 w-5 text-green-700" />
-          <span className="text-xs mt-0.5 text-green-700">Profile</span>
+
+        <Button
+          variant="ghost"
+          onClick={() => navigate("/Mycart")}
+          className="flex flex-col items-center"
+        >
+          <ShoppingCart className="h-5 w-5 text-green-700" />
+          <span className="text-xs mt-0.5 text-green-700">My Cart</span>
         </Button>
       </div>
     </div>
