@@ -21,7 +21,7 @@ import ConfirmAddress from './pages/auth/ConfirmAddress';
 import Home from './pages/buyer/Home'; // ✅ Use Home to match your file
 import Category from './pages/buyer/Category';
 import ProductDetails from './pages/buyer/ProductDetails';
-import MyCart from './pages/buyer/MyCart';
+import Mycart from './pages/buyer/Mycart';
 import SavedItems from './pages/buyer/SavedItems';
 import MyOrders from './pages/buyer/MyOrders';
 import OrderDetails from './pages/buyer/OrderDetails';
@@ -58,9 +58,9 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/category/:category" element={<Category />} />
           <Route path="/product/:product" element={<ProductDetails />} />
-          <Route path="/my-cart" element={<MyCart />} />
+          <Route path="/mycart" element={<Mycart />} />
           <Route path="/saved-items" element={<SavedItems />} />
-          <Route path="/my-orders" element={<MyOrders />} />
+          <Route path="/myorders" element={<MyOrders />} />
           <Route path="/order/:id" element={<OrderDetails />} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/checkout" element={<Checkout />} />
