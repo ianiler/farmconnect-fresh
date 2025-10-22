@@ -1,4 +1,5 @@
 // src/App.jsx
+import './App.css'; 
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "sonner"; // ✅ Global toast notifications
