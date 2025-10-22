@@ -20,12 +20,23 @@ export default function SignUpBuyer() {
     e.preventDefault();
     const newBuyer = { ...form, role: "buyer" };
 
-    // ✅ Save multiple users (not overwrite)
+    // ✅ Get all existing users or create empty array
     const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // 🚫 Check if email already exists
+    const emailExists = users.some((u) => u.email === newBuyer.email);
+    if (emailExists) {
+      alert("⚠️ An account with this email already exists. Please log in instead.");
+      navigate("/login");
+      return;
+    }
+
+    // ✅ Save user and set active session
     users.push(newBuyer);
     localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("activeUser", JSON.stringify(newBuyer));
 
-    alert("✅ Buyer account created! Redirecting to your homepage...");
+    alert("✅ Buyer account created! Redirecting to your Dashboard...");
     navigate("/home");
   };
 
