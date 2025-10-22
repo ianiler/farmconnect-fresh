@@ -1,151 +1,78 @@
-// src/pages/buyer/BuyerHome.jsx
 import React from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Search, Bell, Home, Clipboard, List, ShoppingCart } from "lucide-react";
-import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
 
-export default function BuyerHome() {
+export default function Welcome() {
   const navigate = useNavigate();
 
-  const addToCart = (prod) => {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.push(prod);
-    localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Added to cart!");
-  };
-
-  const categories = [
-    { name: "Vegetables", image: "/images/Vegetables.jpg" },
-    { name: "Poultry", image: "/images/poultry.jpg" },
-    { name: "Fruits", image: "/images/fruits.jpg" },
-    { name: "Fish", image: "/images/fish.jpg" },
-  ];
-
-  const recentProducts = [
-    { name: "Vegetables", price: "UGX 2,000", farmer: "Sandra 0771182017", image: "/images/Vegetables.jpg" },
-    { name: "Eggs", price: "UGX 12,000", farmer: "Bello 0708155525", image: "/images/eggs.jpg" },
-    { name: "Tomatoes", price: "UGX 3,500", farmer: "Juma 0772694420", image: "/images/Tomatoes.jpg" },
-    { name: "Tilapia", price: "UGX 18,000", farmer: "Musa Kato 0781234567", image: "/images/fish.jpg" },
-    { name: "Bananas", price: "UGX 5,000", farmer: "Aisha 0756789123", image: "/images/Banana.jpg" },
-    { name: "Maize", price: "UGX 4,000", farmer: "Kato 0712345678", image: "/images/Maize.jpg" },
-    { name: "Cassava", price: "UGX 2,500", farmer: "Nalwanga 0778765432", image: "/images/Cassava.jpg" },
-    { name: "Potatoes", price: "UGX 3,000", farmer: "Okello 0709876543", image: "/images/Potatoes.jpg" },
-    { name: "Milk", price: "UGX 2,500", farmer: "Fatima 0787654321", image: "/images/milk.jpg" },
-  ];
-
-  const allItems = [
-    ...categories.map(cat => ({ ...cat, price: "", farmer: "" })),
-    ...recentProducts
-  ];
-
-  // Staggered animation variants for cards
-  const container = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.08,
-      },
-    },
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20, scale: 0.95 },
-    visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 200, damping: 20 } },
-  };
-
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] pb-32 px-4 sm:px-6 lg:px-12">
-      {/* Header */}
-      <div className="flex justify-between items-center py-4">
-        <h1 className="text-2xl sm:text-3xl font-bold text-[var(--color-primary)]">
-          What Would You Like To Buy?
-        </h1>
-        <Bell className="h-6 w-6 text-[var(--color-primary)] cursor-pointer" />
-      </div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-green-100 to-green-200 px-6">
+      
+      {/* 🌾 App Logo */}
+      <motion.img
+        src="/images/logo.png" // ✅ Make sure this exists in public/images/
+        alt="FarmConnect Logo"
+        className="w-28 h-28 sm:w-32 sm:h-32 rounded-full shadow-lg mb-6 sm:mb-8 object-cover border-2 border-white"
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.8 }}
+      />
 
-      {/* Search */}
-      <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
-        <Input
-          placeholder="Search for products, farms, or categories..."
-          className="pl-10 border border-[var(--color-primary-light)] rounded-full w-full shadow-sm"
-        />
-      </div>
-
-      {/* Grid */}
-      <motion.div
-        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-6"
-        variants={container}
-        initial="hidden"
-        animate="visible"
+      {/* 🌱 Title */}
+      <motion.h1
+        initial={{ y: -10, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="text-3xl sm:text-4xl font-bold text-green-800 mb-3 text-center drop-shadow-md"
       >
-        {allItems.map((item, idx) => (
-          <motion.div
-            key={idx}
-            variants={cardVariants}
-            whileHover={{ scale: 1.06, y: -3, boxShadow: "0 8px 20px rgba(0,0,0,0.2)" }}
-            onClick={() => {
-              if (item.price) {
-                navigate(`/product/${item.name.toLowerCase().replace(/ /g, "-")}`);
-              } else {
-                navigate(`/category/${item.name.toLowerCase().replace(/ /g, "-")}`);
-              }
-            }}
-            className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer border border-[var(--color-primary-light)] flex flex-col"
-          >
-            <img
-              src={item.image}
-              alt={item.name}
-              className="w-full h-28 md:h-24 lg:h-24 object-cover rounded-t-lg"
-            />
-            <div className="p-2 flex flex-col justify-between flex-1">
-              <div>
-                <p className="text-sm font-bold text-[var(--color-primary)] truncate">{item.name}</p>
-                {item.farmer && (
-                  <p className="text-xs text-gray-600 truncate">
-                    <a href={`tel:${item.farmer.split(" ")[1]}`} className="hover:underline">
-                      {item.farmer}
-                    </a>
-                  </p>
-                )}
-                {item.price && (
-                  <p className="text-sm font-bold text-[var(--color-primary)]">{item.price}</p>
-                )}
-              </div>
-              {item.price && (
-                <Button
-                  onClick={(e) => { e.stopPropagation(); addToCart(item); }}
-                  className="mt-1 bg-[var(--color-primary)] text-white font-bold text-sm py-2 rounded w-full shadow-md transition-transform duration-200 hover:scale-105 hover:shadow-xl hover:bg-[var(--color-primary-light)]"
-                >
-                  Add to Cart
-                </Button>
-              )}
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
+        Buy Farm Produce
+      </motion.h1>
 
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-inner py-2 flex justify-around z-50">
-        {[
-          { icon: Home, label: "Home", path: "/home" },
-          { icon: Clipboard, label: "Orders", path: "/my-orders" },
-          { icon: List, label: "Saved", path: "/saved-items" },
-          { icon: ShoppingCart, label: "Cart", path: "/mycart" },
-        ].map((navItem, idx) => (
-          <motion.div
-            key={idx}
-            whileHover={{ scale: 1.2, y: -2 }}
-            className="flex flex-col items-center cursor-pointer"
-            onClick={() => navigate(navItem.path)}
-          >
-            <navItem.icon className="h-5 w-5 text-[var(--color-primary)]" />
-            <span className="text-xs mt-0.5 text-[var(--color-primary)] font-bold">{navItem.label}</span>
-          </motion.div>
-        ))}
-      </div>
+      {/* 🍅 Subtitle */}
+      <motion.p
+        initial={{ y: -10, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="text-gray-700 text-center mb-6 sm:mb-10 max-w-xs sm:max-w-md leading-relaxed"
+      >
+        Fresh, organic, and locally sourced food — connecting farmers and buyers directly.
+      </motion.p>
+
+      {/* 🖼️ Hero Image */}
+      <motion.img
+        src="/images/welcome-hero.png" // ✅ Make sure you have this in /public/images/
+        alt="Welcome to FarmConnect"
+        className="w-64 sm:w-80 h-64 sm:h-80 rounded-3xl shadow-inner mb-8 object-cover"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6, duration: 0.8 }}
+      />
+
+      {/* 🚀 Get Started Button – Made black, bold, and positioned below like a standard Android button */}
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => navigate("/choose")}
+        className="w-full max-w-xs sm:max-w-sm bg-black text-white py-3 rounded-xl font-bold shadow-md hover:bg-gray-900 transition-all mt-4" // Black bg, bold font, extra margin below for "below" positioning
+      >
+        Get Started
+      </motion.button>
+
+      {/* 🔐 Optional Login Shortcut */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2 }}
+        className="text-sm text-gray-700 mt-4"
+      >
+        Already have an account?{" "}
+        <span
+          onClick={() => navigate("/login")}
+          className="text-green-700 font-semibold cursor-pointer hover:underline"
+        >
+          Log in
+        </span>
+      </motion.p>
     </div>
   );
 }

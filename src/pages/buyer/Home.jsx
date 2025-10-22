@@ -2,7 +2,14 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Search, Bell, Home, Clipboard, List, ShoppingCart } from "lucide-react";
+import {
+  Search,
+  Bell,
+  Home,
+  Clipboard,
+  List,
+  ShoppingCart,
+} from "lucide-react";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 
@@ -13,7 +20,7 @@ export default function BuyerHome() {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     cart.push(prod);
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Added to cart!");
+    alert("✅ Added to cart!");
   };
 
   const categories = [
@@ -35,37 +42,61 @@ export default function BuyerHome() {
     { name: "Milk", price: "UGX 2,500", farmer: "Fatima 0787654321", image: "/images/milk.jpg" },
   ];
 
-  // Combine all products (including categories) into a single consistent grid
   const allProducts = [
-    ...categories.map(cat => ({ ...cat, price: "", farmer: "" })),
-    ...recentProducts
+    ...categories.map((cat) => ({ ...cat, price: "", farmer: "" })),
+    ...recentProducts,
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] pb-32 px-4 sm:px-6 lg:px-12">
-      {/* Header */}
-      <div className="flex justify-between items-center py-4">
-        <h1 className="text-2xl sm:text-3xl font-bold text-[var(--color-primary)]">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 text-[var(--color-text)] pb-20 px-4 sm:px-6 lg:px-12">
+      {/* Header with title and icons */}
+      <div className="flex items-center justify-between py-5">
+        <h1 className="text-2xl sm:text-3xl font-bold text-green-800">
           What Would You Like To Buy?
         </h1>
-        <Bell className="h-6 w-6 text-[var(--color-primary)] cursor-pointer" />
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate("/mycart")}
+          >
+            <ShoppingCart className="h-6 w-6 text-green-700" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate("/saved-items")}
+          >
+            <List className="h-6 w-6 text-green-700" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate("/myorders")}
+          >
+            <Clipboard className="h-6 w-6 text-green-700" />
+          </Button>
+          <Button variant="ghost" size="icon">
+            <Bell className="h-6 w-6 text-green-700" />
+          </Button>
+        </div>
       </div>
 
-      {/* Search */}
-      <div className="relative mb-6">
+      {/* Search Bar */}
+      <div className="relative mb-8">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
         <Input
           placeholder="Search for products, farms, or categories..."
-          className="pl-10 border border-[var(--color-primary-light)] rounded-full w-full shadow-sm"
+          className="pl-10 border border-green-200 rounded-full w-full shadow-sm focus:ring-2 focus:ring-green-400"
         />
       </div>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 mb-10 px-1 sm:px-2">
         {allProducts.map((prod, idx) => (
           <motion.div
             key={idx}
-            whileHover={{ scale: 1.02, y: -1 }}
+            whileHover={{ scale: 1.03, y: -2 }}
             onClick={() => {
               if (prod.price) {
                 navigate(`/product/${prod.name.toLowerCase().replace(/ /g, "-")}`);
@@ -73,31 +104,41 @@ export default function BuyerHome() {
                 navigate(`/category/${prod.name.toLowerCase().replace(/ /g, "-")}`);
               }
             }}
-            className="bg-white rounded-lg shadow overflow-hidden cursor-pointer border border-[var(--color-primary-light)] flex flex-col"
+            className="bg-white rounded-2xl shadow-md overflow-hidden cursor-pointer border border-green-100 flex flex-col hover:shadow-lg transition-all duration-200"
           >
             <img
               src={prod.image}
               alt={prod.name}
-              className="w-full h-24 md:h-28 lg:h-28 object-cover rounded-t-lg"
+              className="w-full h-28 md:h-32 lg:h-36 object-cover rounded-t-2xl"
             />
-            <div className="p-2 flex flex-col justify-between flex-1">
+            <div className="p-3 sm:p-4 flex flex-col justify-between flex-1">
               <div>
-                <p className="text-sm font-bold text-[var(--color-primary)] truncate">{prod.name}</p>
+                <p className="text-sm sm:text-base font-bold text-green-700 truncate">
+                  {prod.name}
+                </p>
                 {prod.farmer && (
-                  <p className="text-xs text-gray-600 truncate">
-                    <a href={`tel:${prod.farmer.split(" ")[1]}`} className="hover:underline">
+                  <p className="text-xs text-gray-600 truncate mt-0.5">
+                    <a
+                      href={`tel:${prod.farmer.split(" ")[1]}`}
+                      className="hover:underline"
+                    >
                       {prod.farmer}
                     </a>
                   </p>
                 )}
                 {prod.price && (
-                  <p className="text-sm font-bold text-[var(--color-primary)]">{prod.price}</p>
+                  <p className="text-sm font-bold text-green-700 mt-1">
+                    {prod.price}
+                  </p>
                 )}
               </div>
               {prod.price && (
                 <Button
-                  onClick={(e) => { e.stopPropagation(); addToCart(prod); }}
-                  className="mt-1 bg-[var(--color-primary)] text-white font-bold text-sm py-1 px-2 rounded w-full hover:bg-[var(--color-primary-light)]"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToCart(prod);
+                  }}
+                  className="mt-2 bg-green-700 text-white font-bold text-xs sm:text-sm py-1.5 px-2 rounded-md w-full hover:bg-green-600 transition-all"
                 >
                   Add to Cart
                 </Button>
@@ -105,26 +146,6 @@ export default function BuyerHome() {
             </div>
           </motion.div>
         ))}
-      </div>
-
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-inner py-2 flex justify-around z-50">
-        <Button variant="ghost" onClick={() => navigate("/home")} className="flex flex-col items-center">
-          <Home className="h-5 w-5 text-[var(--color-primary)]" />
-          <span className="text-xs mt-0.5 text-[var(--color-primary)]">Home</span>
-        </Button>
-        <Button variant="ghost" onClick={() => navigate("/my-orders")} className="flex flex-col items-center">
-          <Clipboard className="h-5 w-5 text-[var(--color-primary)]" />
-          <span className="text-xs mt-0.5 text-[var(--color-primary)]">Orders</span>
-        </Button>
-        <Button variant="ghost" onClick={() => navigate("/saved-items")} className="flex flex-col items-center">
-          <List className="h-5 w-5 text-[var(--color-primary)]" />
-          <span className="text-xs mt-0.5 text-[var(--color-primary)]">Saved</span>
-        </Button>
-        <Button variant="ghost" onClick={() => navigate("/mycart")} className="flex flex-col items-center">
-          <ShoppingCart className="h-5 w-5 text-[var(--color-primary)]" />
-          <span className="text-xs mt-0.5 text-[var(--color-primary)]">Cart</span>
-        </Button>
       </div>
     </div>
   );
