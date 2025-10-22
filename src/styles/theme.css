@@ -1,0 +1,27 @@
+:root {
+  --color-primary: #16a34a;
+  --color-primary-light: #86efac;
+  --color-bg: #f0fdf4;
+  --color-accent: #facc15;
+  --color-text: #14532d;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+h1, h2, h3 {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+button {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+button:hover {
+  transform: scale(1.02);
+}

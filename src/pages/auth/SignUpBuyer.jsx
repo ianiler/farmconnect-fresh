@@ -1,26 +1,32 @@
-// src/pages/auth/SignUpBuyer.jsx
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ShoppingBag } from "lucide-react";
+import { Mail, Lock, Phone, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUpBuyer() {
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
-    companyName: "",
-    preferences: "",
-    deliveryLocation: "",
+    contact: "",
+    location: "",
   });
+  const navigate = useNavigate();
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Buyer Registered:", form);
-    alert("✅ Buyer account created! Redirecting to marketplace...");
-    window.location.href = "/dashboard-buyer"; // Consider using react-router-dom's navigate()
+    const newBuyer = { ...form, role: "buyer" };
+
+    // ✅ Save multiple users (not overwrite)
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    users.push(newBuyer);
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("✅ Buyer account created! Redirecting to your homepage...");
+    navigate("/home");
   };
 
   return (
@@ -31,67 +37,53 @@ export default function SignUpBuyer() {
     >
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md space-y-5"
+        className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md space-y-5"
       >
         <div className="flex items-center justify-center gap-2 mb-4">
-          <ShoppingBag className="w-8 h-8 text-green-600" />
+          <User className="w-8 h-8 text-green-600" />
           <h1 className="text-2xl font-bold text-green-700">Buyer Sign Up</h1>
         </div>
 
-        <input
-          name="name"
-          type="text"
-          placeholder="Full Name"
-          className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300"
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="email"
-          type="email"
-          placeholder="Email Address"
-          className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300"
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300"
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="companyName"
-          type="text"
-          placeholder="Company or Business Name"
-          className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300"
-          onChange={handleChange}
-        />
-        <input
-          name="preferences"
-          type="text"
-          placeholder="What do you buy? (e.g. Maize, Rice)"
-          className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300"
-          onChange={handleChange}
-        />
-        <input
-          name="deliveryLocation"
-          type="text"
-          placeholder="Delivery Address"
-          className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300"
-          onChange={handleChange}
-          required
-        />
+        <Input label="Full Name" name="name" icon={<User />} onChange={handleChange} required />
+        <Input label="Email" name="email" icon={<Mail />} type="email" onChange={handleChange} required />
+        <Input label="Contact" name="contact" icon={<Phone />} type="tel" onChange={handleChange} required />
+        <Input label="Password" name="password" icon={<Lock />} type="password" onChange={handleChange} required />
+        <Input label="Location" name="location" onChange={handleChange} required />
 
         <button
           type="submit"
           className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors"
         >
-          Create Account
+          Create Buyer Account
         </button>
+
+        <p className="text-center text-sm text-gray-600 mt-4">
+          Already have an account?{" "}
+          <span
+            className="text-green-700 font-semibold cursor-pointer hover:underline"
+            onClick={() => navigate("/login")}
+          >
+            Log in
+          </span>
+        </p>
       </form>
     </motion.div>
+  );
+}
+
+function Input({ label, name, icon, type = "text", ...props }) {
+  return (
+    <div>
+      <label className="block text-sm text-gray-600 mb-1">{label}</label>
+      <div className="flex items-center border rounded-lg px-3 bg-gray-50">
+        {icon && <div className="text-gray-400 w-5 h-5 mr-2">{icon}</div>}
+        <input
+          name={name}
+          type={type}
+          className="w-full p-2 outline-none bg-transparent"
+          {...props}
+        />
+      </div>
+    </div>
   );
 }
