@@ -28,6 +28,8 @@ import MyOrders from "./pages/buyer/MyOrders";
 import OrderDetails from "./pages/buyer/OrderDetails";
 import TrackOrder from "./pages/buyer/TrackOrder";
 import Checkout from "./pages/buyer/Checkout";
+import OrderSuccess from "@/pages/buyer/OrderSuccess";
+
 
 // Farmer pages
 import ProfileSetup from "./pages/farmer/ProfileSetup";
@@ -68,6 +70,8 @@ function App() {
           <Route path="/order/:id" element={<OrderDetails />} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/buyer/ordersuccess" element={<OrderSuccess />} />
+
 
           {/* 🌾 Farmer Routes */}
           <Route path="/farmer/profile-setup" element={<ProfileSetup />} />

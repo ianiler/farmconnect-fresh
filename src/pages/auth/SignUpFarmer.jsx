@@ -23,10 +23,21 @@ export default function SignUpFarmer() {
     e.preventDefault();
     const newFarmer = { ...form, role: "farmer" };
 
-    // ✅ Save multiple users
+    // ✅ Get all existing users
     const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // 🚫 Check if email already exists
+    const emailExists = users.some((u) => u.email === newFarmer.email);
+    if (emailExists) {
+      alert("⚠️ An account with this email already exists. Please log in instead.");
+      navigate("/login");
+      return;
+    }
+
+    // ✅ Save user and set active session
     users.push(newFarmer);
     localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("activeUser", JSON.stringify(newFarmer));
 
     alert("✅ Farmer account created! Redirecting to your dashboard...");
     navigate("/farmer/home");

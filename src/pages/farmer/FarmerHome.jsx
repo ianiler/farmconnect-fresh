@@ -12,30 +12,38 @@ import {
   List,
   User,
   Upload,
+  Wallet,
 } from "lucide-react";
+import { ethers } from "ethers"; // ✅ Import ethers.js
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function FarmerHome() {
   const navigate = useNavigate();
 
-  // ✅ Example initial products (replace with your own images later)
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: "Fresh Tomatoes",
-      price: "₦500",
-      stock: "In Stock",
-      image: "/images/tomatoes.jpg",
-    },
-    {
-      id: 2,
-      name: "Organic Maize",
-      price: "₦300 per kg",
-      stock: "Low Stock",
-      image: "/images/maize.jpg",
-    },
-  ]);
+  // ✅ Wallet state
+  const activeUser = JSON.parse(localStorage.getItem("activeUser")) || {};
+  const [walletAddress, setWalletAddress] = useState(activeUser.wallet || "");
+
+  // ✅ Products state with persistence
+  const [products, setProducts] = useState(() => {
+    return JSON.parse(localStorage.getItem("products")) || [
+      {
+        id: 1,
+        name: "Fresh Tomatoes",
+        price: "₦500",
+        stock: "In Stock",
+        image: "/images/tomatoes.jpg",
+      },
+      {
+        id: 2,
+        name: "Organic Maize",
+        price: "₦300 per kg",
+        stock: "Low Stock",
+        image: "/images/maize.jpg",
+      },
+    ];
+  });
 
   const [newProduct, setNewProduct] = useState({
     name: "",
@@ -45,6 +53,41 @@ export default function FarmerHome() {
   });
   const [preview, setPreview] = useState(null);
   const [showUpload, setShowUpload] = useState(false);
+
+  // ✅ Connect Wallet Function
+  const connectWallet = async () => {
+    if (!window.ethereum) {
+      toast.error("Please install MetaMask to connect your wallet!");
+      return;
+    }
+
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts", []);
+      const wallet = accounts[0];
+
+      // Update local state
+      setWalletAddress(wallet);
+
+      // ✅ Update activeUser in localStorage
+      const activeUser = JSON.parse(localStorage.getItem("activeUser")) || {};
+      activeUser.wallet = wallet;
+      localStorage.setItem("activeUser", JSON.stringify(activeUser));
+
+      // ✅ Update users array if user exists
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const idx = users.findIndex((u) => u.email === activeUser.email);
+      if (idx >= 0) {
+        users[idx].wallet = wallet;
+        localStorage.setItem("users", JSON.stringify(users));
+      }
+
+      toast.success(`Wallet connected: ${wallet.slice(0, 6)}...${wallet.slice(-4)}`);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to connect wallet.");
+    }
+  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -62,7 +105,14 @@ export default function FarmerHome() {
       return;
     }
     const added = { ...newProduct, id: Date.now() };
-    setProducts([...products, added]);
+
+    // ✅ Add product to state and persist
+    setProducts((prev) => {
+      const updated = [...prev, added];
+      localStorage.setItem("products", JSON.stringify(updated));
+      return updated;
+    });
+
     setNewProduct({ name: "", price: "", stock: "", image: "" });
     setPreview(null);
     setShowUpload(false);
@@ -76,7 +126,12 @@ export default function FarmerHome() {
   };
 
   const handleRemove = (id) => {
-    setProducts(products.filter((p) => p.id !== id));
+    // ✅ Remove product and persist
+    setProducts((prev) => {
+      const updated = prev.filter((p) => p.id !== id);
+      localStorage.setItem("products", JSON.stringify(updated));
+      return updated;
+    });
     toast.success("Product removed.");
   };
 
@@ -85,10 +140,27 @@ export default function FarmerHome() {
       {/* Header */}
       <div className="flex justify-between items-center px-6 py-4 bg-white shadow-sm">
         <h1 className="text-2xl font-bold text-green-800">My Farm Dashboard</h1>
-        <Bell
-          className="h-6 w-6 text-green-700 cursor-pointer"
-          onClick={() => navigate("/farmer/notifications")}
-        />
+
+        <div className="flex items-center gap-4">
+          {/* ✅ Connect Wallet Button */}
+          {walletAddress ? (
+            <span className="text-sm font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full">
+              {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
+            </span>
+          ) : (
+            <button
+              onClick={connectWallet}
+              className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors shadow"
+            >
+              <Wallet className="h-4 w-4" /> Connect Wallet
+            </button>
+          )}
+
+          <Bell
+            className="h-6 w-6 text-green-700 cursor-pointer"
+            onClick={() => navigate("/farmer/notifications")}
+          />
+        </div>
       </div>
 
       {/* Search Bar */}
