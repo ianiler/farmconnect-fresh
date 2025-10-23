@@ -1,28 +1,9 @@
+/* src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* GLOBAL RESET + THEME */
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: white;
-  color: rgba(0, 0, 0, 0.87);
-}
-
-/* Make sure the background color comes from Tailwind classes, not CSS */
+/* Optional global overrides */
 body {
-  @apply bg-green-50 text-gray-900;
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;  /* centers horizontally */
-  align-items: flex-start;  /* keeps top alignment */
-}
-
-/* Optional: link hover color */
-a {
-  @apply text-green-600 hover:text-green-700 font-medium;
+  
 }

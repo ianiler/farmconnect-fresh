@@ -1,4 +1,5 @@
 // src/App.jsx
+import './App.css'; 
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "sonner"; // ✅ Global toast notifications
@@ -27,6 +28,8 @@ import MyOrders from "./pages/buyer/MyOrders";
 import OrderDetails from "./pages/buyer/OrderDetails";
 import TrackOrder from "./pages/buyer/TrackOrder";
 import Checkout from "./pages/buyer/Checkout";
+import OrderSuccess from "@/pages/buyer/OrderSuccess";
+
 
 // Farmer pages
 import ProfileSetup from "./pages/farmer/ProfileSetup";
@@ -67,6 +70,8 @@ function App() {
           <Route path="/order/:id" element={<OrderDetails />} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/buyer/ordersuccess" element={<OrderSuccess />} />
+
 
           {/* 🌾 Farmer Routes */}
           <Route path="/farmer/profile-setup" element={<ProfileSetup />} />

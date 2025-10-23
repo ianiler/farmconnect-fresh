@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, Lock } from "lucide-react";
@@ -7,6 +7,15 @@ export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
+  // 🚀 Auto-redirect if user is already logged in
+  useEffect(() => {
+    const activeUser = JSON.parse(localStorage.getItem("activeUser"));
+    if (activeUser) {
+      if (activeUser.role === "farmer") navigate("/farmer/home");
+      else if (activeUser.role === "buyer") navigate("/home");
+    }
+  }, [navigate]);
+
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -14,25 +23,27 @@ export default function Login() {
     e.preventDefault();
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    const foundUser = users.find(
-      (u) => u.email === form.email && u.password === form.password
-    );
+    // 🔍 Find user by email
+    const foundUser = users.find((u) => u.email === form.email);
 
     if (!foundUser) {
-      alert("❌ Invalid email or password.");
+      alert("❌ No account found with this email. Please sign up first.");
       return;
     }
 
-    // ✅ Log user for debugging
-    console.log("✅ Logged in user:", foundUser);
+    if (foundUser.password !== form.password) {
+      alert("❌ Incorrect password. Please try again.");
+      return;
+    }
 
+    // ✅ Log user in
     localStorage.setItem("activeUser", JSON.stringify(foundUser));
-    alert(`Welcome back, ${foundUser.name}!`);
+    alert(`✅ Welcome back, ${foundUser.name}!`);
 
-    // ✅ Redirect by role
+    // 🚀 Redirect based on role
     if (foundUser.role === "farmer") navigate("/farmer/home");
     else if (foundUser.role === "buyer") navigate("/home");
-    else navigate("/"); // fallback
+    else navigate("/");
   };
 
   return (
@@ -49,8 +60,22 @@ export default function Login() {
           Login to FarmConnect
         </h1>
 
-        <Input label="Email" name="email" icon={<Mail />} onChange={handleChange} required />
-        <Input label="Password" name="password" icon={<Lock />} type="password" onChange={handleChange} required />
+        <Input
+          label="Email"
+          name="email"
+          icon={<Mail />}
+          type="email"
+          onChange={handleChange}
+          required
+        />
+        <Input
+          label="Password"
+          name="password"
+          icon={<Lock />}
+          type="password"
+          onChange={handleChange}
+          required
+        />
 
         <button
           type="submit"
